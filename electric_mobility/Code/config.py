@@ -1,0 +1,12 @@
+SPEED_LIMIT_URBAN = 35.0
+SPEED_LIMIT_RURAL = 80.0
+
+FRR_FACTOR = 1
+FRR_ASPHALTED = 0.01 * FRR_FACTOR
+FRR_GRAVEL = 0.025 * FRR_FACTOR
+
+CHARGING_POWERS = {"Fast": 80.0, "Semi-Fast": 25.0, "Home": 8.0, "Heavy-vehicle": 50.0, "Motorcycle": 0.42, "Micromobility": 0.084} # En kW
+CHARGING_EFFICIENCY = 0.9
+
+TIME_STEPS = 86400
+
