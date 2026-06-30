@@ -27,14 +27,16 @@ def run_multi_island_analysis():
     """Corre el ciclo completo para cada vehículo × isla.
 
     Retorna:
-        band_kwh        : dict {island: {sheet: [kWh_b0..kWh_b7]}}
-        distances       : dict {island: {sheet: km}}
-        grid_p_profiles : dict {island: {sheet: np.ndarray(86400)}} en kW
+        band_kwh         : dict {island: {sheet: [kWh_b0..kWh_b7]}}
+        distances        : dict {island: {sheet: km}}
+        grid_p_profiles  : dict {island: {sheet: np.ndarray(86400)}} en kW
+        soc_ch_profiles  : dict {island: {sheet: np.ndarray(86400)}} SoC con carga [0-1]
     """
     os.makedirs("results", exist_ok=True)
-    distances       = {}
-    band_kwh        = {}
-    grid_p_profiles = {}
+    distances        = {}
+    band_kwh         = {}
+    grid_p_profiles  = {}
+    soc_ch_profiles  = {}
 
     for island in ISLANDS:
         island_dir = ISLAND_DIR[island]
@@ -44,9 +46,10 @@ def run_multi_island_analysis():
         ov_folder  = f"results/overview/{island_dir}"
         for folder in (dc_folder, pc_folder, sc_folder, ov_folder):
             os.makedirs(folder, exist_ok=True)
-        distances[island]       = {}
-        band_kwh[island]        = {}
-        grid_p_profiles[island] = {}
+        distances[island]        = {}
+        band_kwh[island]         = {}
+        grid_p_profiles[island]  = {}
+        soc_ch_profiles[island]  = {}
         print(f"\n{'='*55}")
         print(f"  ISLA: {island}")
         print(f"{'='*55}")
@@ -67,7 +70,8 @@ def run_multi_island_analysis():
                 float(np.sum(grid_p[i * BAND_SIZE:(i + 1) * BAND_SIZE]) / 3600)
                 for i in range(8)
             ]
-            grid_p_profiles[island][sheet] = grid_p.copy()
+            grid_p_profiles[island][sheet]  = grid_p.copy()
+            soc_ch_profiles[island][sheet]  = soc_ch.copy()
 
             print(f"  Distancia: {dist_km:.2f} km | Grid: {grid_e:.2f} kWh | SoC final: {final_s*100:.1f}%")
 
@@ -151,7 +155,7 @@ def run_multi_island_analysis():
     print(f"\nDistancias guardadas en {FULL_FILE} (Q12:Q14 por hoja)")
     print("Imagenes guardadas en results/")
 
-    return band_kwh, distances, grid_p_profiles
+    return band_kwh, distances, grid_p_profiles, soc_ch_profiles
 
 
 if __name__ == "__main__":

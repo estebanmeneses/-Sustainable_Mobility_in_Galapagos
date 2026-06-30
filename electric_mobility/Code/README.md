@@ -129,7 +129,7 @@ PLOT_YEAR = 2030   # ← cambiar al año deseado (2019–2050)
 ### 4. Correr el análisis completo
 
 ```bash
-python main.py
+python main.py    # Se recomienda estar dentro de la carpeta de CODE para correr el programa
 ```
 
 Genera todos los outputs (Excel, pkl, gráficas PNG) en las carpetas `output/` y `results/`.
