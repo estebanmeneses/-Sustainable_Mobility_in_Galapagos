@@ -37,6 +37,7 @@ def run_multi_island_analysis():
     band_kwh         = {}
     grid_p_profiles  = {}
     soc_ch_profiles  = {}
+    driving_profiles = {}
 
     for island in ISLANDS:
         island_dir = ISLAND_DIR[island]
@@ -50,6 +51,7 @@ def run_multi_island_analysis():
         band_kwh[island]         = {}
         grid_p_profiles[island]  = {}
         soc_ch_profiles[island]  = {}
+        driving_profiles[island] = {}
         print(f"\n{'='*55}")
         print(f"  ISLA: {island}")
         print(f"{'='*55}")
@@ -64,7 +66,8 @@ def run_multi_island_analysis():
                 p_req, bat_cap, FULL_FILE, sheet, island=island)
 
             dist_km = float(np.sum(v) / 3600.0)
-            distances[island][sheet] = dist_km
+            distances[island][sheet]        = dist_km
+            driving_profiles[island][sheet] = (v.copy(), frr.copy(), theta.copy())
 
             band_kwh[island][sheet] = [
                 float(np.sum(grid_p[i * BAND_SIZE:(i + 1) * BAND_SIZE]) / 3600)
@@ -155,7 +158,7 @@ def run_multi_island_analysis():
     print(f"\nDistancias guardadas en {FULL_FILE} (Q12:Q14 por hoja)")
     print("Imagenes guardadas en results/")
 
-    return band_kwh, distances, grid_p_profiles, soc_ch_profiles
+    return band_kwh, distances, grid_p_profiles, soc_ch_profiles, driving_profiles
 
 
 if __name__ == "__main__":

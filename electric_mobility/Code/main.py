@@ -1,17 +1,19 @@
 from openpyxl import load_workbook, Workbook  # noqa: F401
 
+import datetime
 import numpy as np
 import pandas as pd
 import vehicle_cycle
 import fleet_power
+from config import FRR_ASPHALTED, FRR_GRAVEL
+from utils import extract_island_data, to_sec
 
-YEARS          = list(range(2019, 2051))
-BAND_LABELS    = [f"{h:02d}:00-{h+3:02d}:00" for h in range(0, 24, 3)]
-ISLANDS        = vehicle_cycle.ISLANDS
-VEHICLE_SHEETS = vehicle_cycle.VEHICLE_SHEETS
-OUTPUT_FILE    = "output/energia_por_vehiculo.xlsx"
-SOC_FILE       = "output/soc_por_vehiculo.xlsx"
-
+YEARS               = list(range(2019, 2051))
+BAND_LABELS         = [f"{h:02d}:00-{h+3:02d}:00" for h in range(0, 24, 3)]
+ISLANDS             = vehicle_cycle.ISLANDS
+VEHICLE_SHEETS      = vehicle_cycle.VEHICLE_SHEETS
+OUTPUT_FILE         = "output/energia_por_vehiculo.xlsx"
+SOC_FILE            = "output/soc_por_vehiculo.xlsx"
 
 def write_energy_excel(band_kwh: dict) -> None:
     import os
@@ -58,7 +60,8 @@ def write_soc_excel(soc_ch_profiles: dict) -> None:
 
 
 if __name__ == "__main__":
-    band_kwh, distances, grid_p_profiles, soc_ch_profiles = vehicle_cycle.run_multi_island_analysis()
+    band_kwh, distances, grid_p_profiles, soc_ch_profiles, driving_profiles = \
+        vehicle_cycle.run_multi_island_analysis()
     write_energy_excel(band_kwh)
     write_soc_excel(soc_ch_profiles)
     all_power, all_energy = fleet_power.run(grid_p_profiles)
